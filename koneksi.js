@@ -1,4 +1,4 @@
-import pino from "pino"
+//import pino from "pino"
 import baileys from "@whiskeysockets/baileys"
 import {readFileSync,existsSync,writeFileSync,rmSync} from "fs"
 
