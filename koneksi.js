@@ -1,8 +1,7 @@
 let baileys
 let pino
 export default function wa({baileys,pino}) {
-    baileys = baileys
-    pino = pino
+    ({baileys,pino} = {baileys,pino})
 }
 
 const decodeJid = (jid) => {
