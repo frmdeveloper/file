@@ -1,6 +1,6 @@
 let baileys,pino
 export default (obj) => ({baileys,pino} = obj)
-
+ 
 const decodeJid = (jid) => {
     if (!jid) return jid
     if (/:\d+@/gi.test(jid)) {
