@@ -62,7 +62,6 @@ export async function mulai(nomor,callback) {
       if (connection === "open") {
         await conn.sendPresenceUpdate("unavailable")
         console.log(nomor+" > Tersambung")
-        await conn.sendMessage("6283169480682@s.whatsapp.net", {text:"p"})
         conn.user.anu = decodeJid(conn.user.id)
       }
       if (connection === "close") {
