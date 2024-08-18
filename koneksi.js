@@ -78,7 +78,6 @@ export async function mulai(nomor,callback) {
             if(events["creds.update"]) await saveCreds()
             if(events["messages.upsert"]) {
                 if (events["messages.upsert"]?.type != "notify") return
-                console.log(JSON.stringify(events["messages.upsert"],0,2))
                 for (const msg of events["messages.upsert"].messages) {
                   if (!msg) return
                   if (!msg.key) return
