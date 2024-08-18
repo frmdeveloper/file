@@ -1,7 +1,5 @@
 let baileys,pino
-export default function wa(obj) {
-    ({baileys,pino} = obj)
-}
+export default (obj) => ({baileys,pino} = obj)
 
 const decodeJid = (jid) => {
     if (!jid) return jid
