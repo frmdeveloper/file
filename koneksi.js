@@ -1,6 +1,11 @@
 //import pino from "pino"
-import baileys from "@whiskeysockets/baileys"
-import {readFileSync,existsSync,writeFileSync,rmSync} from "fs"
+//import {readFileSync,existsSync,writeFileSync,rmSync} from "fs"
+let baileys
+let pino
+export default function wa(b,p) {
+    baileys = b
+    pino = p
+}
 
 const decodeJid = (jid) => {
     if (!jid) return jid
