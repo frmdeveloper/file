@@ -47,7 +47,8 @@ export async function mulai(nomor,callback) {
     conn.decodeJid = decodeJid
     conn.download = download
     conn.addMember = async(jid, mem) => {
-        const p = await conn.groupParticipantsUpdate(jid, mem, "add")
+        const ada = (await conn.onWhatsApp(...mem)).filter(a => a.exists).map(a => a.jid)
+        const p = await conn.groupParticipantsUpdate(jid, ada, "add")
         const cod = p.filter(a => a.status == "403").map(a => a.content)
         for (const kod of cod) {
         await conn.relayMessage(kod.attrs.jid, {
