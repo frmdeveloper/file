@@ -1,8 +1,32 @@
-export const terima = async(conn, m) => {
-    if (!conn || !m) return {}
-    if (m.key.id.endsWith("-FRM") && m.key.id.length === 32) return
-    if (m.key.id.startsWith("3EB0") && m.key.id.length === 12) return
-    if (m.key.id.startsWith("BAE5") && m.key.id.length === 16) return
+const jidDecode = (jid) => {
+    const sepIdx = typeof jid === 'string' ? jid.indexOf('@') : -1;
+    if (sepIdx < 0) {
+        return undefined;
+    }
+    const server = jid.slice(sepIdx + 1);
+    const userCombined = jid.slice(0, sepIdx);
+    const [userAgent, device] = userCombined.split(':');
+    const user = userAgent.split('_')[0];
+    return {
+        server,
+        user,
+        domainType: server === 'lid' ? 1 : 0,
+        device: device ? +device : undefined
+    };
+}
+const decodeJid = (jid) => {
+    if (!jid) return jid
+    if (/:\d+@/gi.test(jid)) {
+      const decode = jidDecode(jid) || {}
+      return decode.user && decode.server && decode.user + "@" + decode.server || jid
+    } else return jid
+}
+
+export const terima = async(m) => {
+    if (!m) return {}
+    //if (m.key.id.endsWith("-FRM") && m.key.id.length === 32) return
+    //if (m.key.id.startsWith("3EB0") && m.key.id.length === 12) return
+    //if (m.key.id.startsWith("BAE5") && m.key.id.length === 16) return
     
     const msg = {}
     msg.full = m
@@ -12,7 +36,7 @@ export const terima = async(conn, m) => {
         msg.from = m.key.remoteJid
         msg.fromMe = m.key.fromMe
         msg.isGroup = msg.from.endsWith('@g.us')
-        msg.sender = msg.fromMe ? conn.decodeJid(conn.user.id) : (m.key.participant || m.key.remoteJid)
+        msg.sender = msg.fromMe ? m.gw : (m.key.participant || m.key.remoteJid)
         msg.pushname = m.pushName
     }
     if (m.message) {
@@ -41,10 +65,10 @@ export const terima = async(conn, m) => {
         let type = Object.keys(quoted)[0]
         const isi = quoted[type]
         msg.quoted.type = type
-        msg.quoted.from = conn.decodeJid(msg.msg.contextInfo.remoteJid || msg.from || msg.sender)
+        msg.quoted.from = decodeJid(msg.msg.contextInfo.remoteJid || msg.from || msg.sender)
         msg.quoted.id = msg.msg.contextInfo.stanzaId
-        msg.quoted.sender = conn.decodeJid(msg.msg.contextInfo.participant)
-        msg.quoted.fromMe = msg.quoted.sender === (conn.user && conn.user.jid)
+        msg.quoted.sender = decodeJid(msg.msg.contextInfo.participant)
+        msg.quoted.fromMe = msg.quoted.sender == m.gw
         msg.quoted.key = {remoteJid: msg.quoted.from, id: msg.quoted.id, fromMe: msg.quoted.fromMe, participant: msg.quoted.sender}
         msg.quoted.text = isi.caption || isi.text || isi.message?.documentMessage?.caption || isi
         msg.quoted.mentionedJid = quoted[type].contextInfo?.mentionedJid
