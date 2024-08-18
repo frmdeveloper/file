@@ -1,10 +1,8 @@
-//import pino from "pino"
-//import {readFileSync,existsSync,writeFileSync,rmSync} from "fs"
 let baileys
 let pino
-export default function wa(b,p) {
-    baileys = b
-    pino = p
+export default function wa({baileys,pino}) {
+    baileys = baileys
+    pino = pino
 }
 
 const decodeJid = (jid) => {
