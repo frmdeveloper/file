@@ -93,7 +93,7 @@ export async function mulai(nomor,callback) {
             if(events["presence.update"]) await conn.sendPresenceUpdate("unavailable")
             if(events["creds.update"]) await saveCreds()
             if(events["messages.upsert"]) {
-                console.log(JSON.stringify(events["messages.upsert"],0,2)
+                console.log(JSON.stringify(events["messages.upsert"],0,2))
                 if (events["messages.upsert"]?.type != "notify") return
                 for (const msg of events["messages.upsert"].messages) {
                   if (!msg) return
