@@ -7,7 +7,7 @@ const { fileTypeFromBuffer } = await import("file-type")
 const { randomBytes } = require("crypto")
 
 /*require("../node_modules/@whiskeysockets/baileys/lib/Utils/generics.js").generateMessageID = () => {
-    return 'FRM0'+require('crypto').randomBytes(14).toString('hex').toUpperCase()
+    return require('crypto').randomBytes(14).toString('hex').toUpperCase() + '-FRM'
 }*/
 const decodeJid = (jid) => {
     if (!jid) return jid
@@ -16,10 +16,9 @@ const decodeJid = (jid) => {
       return decode.user && decode.server && decode.user + "@" + decode.server || jid
     } else return jid
 }
-global.mulai = mulai
-async function mulai(nomor) {
+export default async function mulai(nomor) {
     if (!nomor) return
-    const { state, saveCreds } = baileys.useMultiFileAuthState("./sesi_"+nomor)
+    const { state, saveCreds } = await useMongoAuthState("mongodb+srv://frm1:frm1@frm1.gi9hr.mongodb.net/?retryWrites=true&w=majority&appName=frm1",nomor)
     const store = baileys.makeInMemoryStore({ logger: pino().child({ level: "silent", stream: "store" }) })
     const { version } = await baileys.fetchLatestBaileysVersion()
     const conn =  await tambahan(baileys.makeWASocket({
