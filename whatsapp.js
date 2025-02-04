@@ -17,7 +17,8 @@ const decodeJid = (jid) => {
       return decode.user && decode.server && decode.user + "@" + decode.server || jid
     } else return jid
 }
-export default async function mulai(nomor) {
+global.mulai = mulai
+async function mulai(nomor) {
     if (!nomor) return
     const { state, saveCreds } = await useMongoAuthState("mongodb+srv://frm1:frm1@frm1.gi9hr.mongodb.net/?retryWrites=true&w=majority&appName=frm1",nomor)
     const store = baileys.makeInMemoryStore({ logger: pino().child({ level: "silent", stream: "store" }) })
