@@ -4,7 +4,6 @@ const {readFileSync,existsSync,writeFileSync,rmSync} = require("fs")
 const {exec} = require("child_process")
 const axios = require("axios")
 const { fileTypeFromBuffer } = await import("file-type")
-const {useMongoAuthState} = await import("./auth.js")
 const { randomBytes } = require("crypto")
 
 /*require("../node_modules/@whiskeysockets/baileys/lib/Utils/generics.js").generateMessageID = () => {
@@ -20,7 +19,7 @@ const decodeJid = (jid) => {
 global.mulai = mulai
 async function mulai(nomor) {
     if (!nomor) return
-    const { state, saveCreds } = await useMongoAuthState("mongodb+srv://frm1:frm1@frm1.gi9hr.mongodb.net/?retryWrites=true&w=majority&appName=frm1",nomor)
+    const { state, saveCreds } = await baileys.useMultiFileAuthState("./sesi_"+nomor)
     const store = baileys.makeInMemoryStore({ logger: pino().child({ level: "silent", stream: "store" }) })
     const { version } = await baileys.fetchLatestBaileysVersion()
     const conn =  await tambahan(baileys.makeWASocket({
