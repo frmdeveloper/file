@@ -4,6 +4,7 @@ const {readFileSync,existsSync,writeFileSync,rmSync} = require("fs")
 const {exec} = require("child_process")
 const axios = require("axios")
 const { fileTypeFromBuffer } = await import("file-type")
+const {useMongoAuthState} = await import("./auth.js")
 const { randomBytes } = require("crypto")
 
 /*require("../node_modules/@whiskeysockets/baileys/lib/Utils/generics.js").generateMessageID = () => {
