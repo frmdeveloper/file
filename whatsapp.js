@@ -7,7 +7,7 @@ const { fileTypeFromBuffer } = await import("file-type")
 const { randomBytes } = require("crypto")
 
 /*require("../node_modules/@whiskeysockets/baileys/lib/Utils/generics.js").generateMessageID = () => {
-    return require('crypto').randomBytes(14).toString('hex').toUpperCase() + '-FRM'
+    return 'FRM0'+require('crypto').randomBytes(14).toString('hex').toUpperCase()
 }*/
 const decodeJid = (jid) => {
     if (!jid) return jid
