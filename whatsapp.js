@@ -95,14 +95,11 @@ const terima = async(conn, m) => {
         msg.pushname = m.pushName
     }
     if (m.message) {
-        if (m?.message?.messageContextInfo) delete m.message.messageContextInfo
-        if (m?.message?.senderKeyDistributionMessage) delete m.message.senderKeyDistributionMessage
         m.message = m.message.viewOnceMessageV2?.message ||
             m.message.documentWithCaptionMessage?.message ||
             m.message.editedMessage?.message?.protocolMessage?.editedMessage ||
             m.message 
-        let mtype = Object.keys(m.message)
-        msg.type = mtype.find(k => (k === 'conversation' || k.includes('Message')) && k !== 'senderKeyDistributionMessage')
+        msg.type = baileys.getContentType(m.message)
         msg.msg = m.message[msg.type]
         msg.text = m.message.conversation || msg.msg?.text || msg.msg?.caption || msg.msg?.selectedId || ''
         const terpusah = /^(#|\!|\/|\.)( +)/.test(msg.text)
@@ -200,26 +197,11 @@ async function tambahan(conn) {
         const ciphered = baileys.aesEncryptCTR(conn.authState.creds.pairingEphemeralKeyPair.public, key, randomIv);
         return Buffer.concat([salt, randomIv, ciphered]);
     }
-    conn.appenTextMessage = async(text, chatUpdate) => {
-        if (!chatUpdate || !text) return
-        const messages = await baileys.generateWAMessage(chatUpdate.key.remoteJid, { text: text }, {
-            userJid: conn.user.id
-        })
-        messages.key.fromMe = false
-        messages.key.id = chatUpdate.key.id
-        let msg = {
-            ...chatUpdate,
-            messages: [baileys.proto.WebMessageInfo.fromObject(messages)],
-            type: "append"
-        }
-        conn.ev.emit("messages.upsert", msg)
-    }
     conn.download = async (message, type) => {
     	if (!message) throw new Error("empty")
-        delete message["senderKeyDistributionMessage"]; delete message["messageContextInfo"]
-        let tipe = Object.keys(message)[0]
+        let tipe = baileys.getContentType(message)
         if (Object.keys(message)?.includes("viewOnceMessageV2")) {
-            tipe = Object.keys(message.viewOnceMessageV2.message)[0]
+            tipe = baileys.getContentType(message.viewOnceMessageV2.message)
             message = message.viewOnceMessageV2.message
         }
         const stream = await baileys.downloadContentFromMessage(message[tipe], type || tipe.replace(/Message/gi, ""))
