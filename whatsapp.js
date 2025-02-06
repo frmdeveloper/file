@@ -76,7 +76,6 @@ const terima = async(conn, m) => {
     if (m.key.id.startsWith("FRM0") && m.key.id.length === 32) return
     if (m.key.id.startsWith("3EB0") && m.key.id.length === 12) return
     if (m.key.id.startsWith("BAE5") && m.key.id.length === 16) return
-    
     const msg = {}
     msg.full = m
     if (m.key) {
@@ -89,14 +88,14 @@ const terima = async(conn, m) => {
         msg.pushname = m.pushName
     }
     if (m.message) {
-        //if (m?.message?.messageContextInfo) delete m.message.messageContextInfo
-        //if (m?.message?.senderKeyDistributionMessage) delete m.message.senderKeyDistributionMessage
+        if (m?.message?.messageContextInfo) delete m.message.messageContextInfo
+        if (m?.message?.senderKeyDistributionMessage) delete m.message.senderKeyDistributionMessage
         m.message = m.message.viewOnceMessageV2?.message ||
             m.message.documentWithCaptionMessage?.message ||
             m.message.editedMessage?.message?.protocolMessage?.editedMessage ||
             m.message 
         let mtype = Object.keys(m.message)
-        msg.type = (!['senderKeyDistributionMessage', 'messageContextInfo'].includes(mtype[0]) && mtype[0]) || (mtype.length >= 3 && mtype[1] !== 'messageContextInfo' && mtype[1]) || mtype[mtype.length - 1]
+        msg.type = mtype.find(k => (k === 'conversation' || k.includes('Message')) && k !== 'senderKeyDistributionMessage')
         msg.msg = m.message[msg.type]
         msg.text = m.message.conversation || msg.msg?.text || msg.msg?.caption || msg.msg?.selectedId || ''
         const terpusah = /^(#|\!|\/|\.)( +)/.test(msg.text)
