@@ -1,6 +1,14 @@
 /*require("../node_modules/@whiskeysockets/baileys/lib/Utils/generics.js").generateMessageID = () => {
     return require('crypto').randomBytes(14).toString('hex').toUpperCase() + '-FRM'
 }*/
+function isUrl(str) {
+  try {
+    new URL(str)
+    return true
+  } catch (e) {
+    return false
+  }
+}
 const decodeJid = (jid) => {
     if (!jid) return jid
     if (/:\d+@/gi.test(jid)) {
@@ -126,7 +134,11 @@ const terima = async(conn, m) => {
 }
 
 async function tambahan(conn) {
-	conn.text = async(text,m) => conn.sendMessage(m.from, {text}, {quoted:m.full})
+	conn.text = async(m,text) => conn.sendMessage(m.from, {text}, {quoted:m.full})
+	conn.sticker = async(m,stk) => conn.sendMessage(m.from, {sticker:Buffer.isBuffer(stk) ? stk : isUrl(stk) ? {url:stk} : null}, {quoted:m.full})
+	conn.image = async(m,img,caption) => conn.sendMessage(m.from, {caption,image:Buffer.isBuffer(img) ? img : isUrl(img) ? {url:img} : null}, {quoted:m.full})
+	conn.video = async(m,vid,caption) => conn.sendMessage(m.from, {caption,video:Buffer.isBuffer(vid) ? vid : isUrl(vid) ? {url:vid} : null}, {quoted:m.full})
+	conn.audio = async(m,aud,mime) => conn.sendMessage(m.from, {mimetype,audio:Buffer.isBuffer(aud) ? aud : isUrl(aud) ? {url:aud} : null}, {quoted:m.full})
 	conn.requestPairingCode = async (phoneNumber,code) => {
         conn.authState.creds.pairingCode = code
         conn.authState.creds.me = {
