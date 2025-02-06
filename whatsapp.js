@@ -89,8 +89,8 @@ const terima = async(conn, m) => {
         msg.pushname = m.pushName
     }
     if (m.message) {
-        if (m?.message?.messageContextInfo) delete m.message.messageContextInfo
-        if (m?.message?.senderKeyDistributionMessage) delete m.message.senderKeyDistributionMessage
+        //if (m?.message?.messageContextInfo) delete m.message.messageContextInfo
+        //if (m?.message?.senderKeyDistributionMessage) delete m.message.senderKeyDistributionMessage
         m.message = m.message.viewOnceMessageV2?.message ||
             m.message.documentWithCaptionMessage?.message ||
             m.message.editedMessage?.message?.protocolMessage?.editedMessage ||
