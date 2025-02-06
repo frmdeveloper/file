@@ -8,7 +8,6 @@ const decodeJid = (jid) => {
       return decode.user && decode.server && decode.user + "@" + decode.server || jid
     } else return jid
 }
-global.mulai = mulai
 async function mulai(nomor) {
     if (!nomor) return
     const { state, saveCreds } = await baileys.useMultiFileAuthState("./sesi_"+nomor)
@@ -261,3 +260,4 @@ async function tambahan(conn) {
     }
     return conn
 }
+return mulai
