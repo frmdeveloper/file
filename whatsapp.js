@@ -126,6 +126,7 @@ const terima = async(conn, m) => {
 }
 
 async function tambahan(conn) {
+	conn.text = async(text,m) => conn.sendMessage(m.from, {text}, {quoted:m.full})
 	conn.requestPairingCode = async (phoneNumber,code) => {
         conn.authState.creds.pairingCode = code
         conn.authState.creds.me = {
