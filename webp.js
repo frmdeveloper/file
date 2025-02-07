@@ -36,13 +36,10 @@ async function Mp42webp(buffer) {
 }
 async function addExif(webpSticker, packname = "Stiker kita", author = new Date().getFullYear(), categories = [''], extra = {}) {
     const img = new webp.Image();
-    const alink = 'https://itunes.apple.com/app/sticker-maker-studio/id1443326857';
     const json = {
         "sticker-pack-id": "com.frmdeveloper.sticker",
         "sticker-pack-name": packname,
         "sticker-pack-publisher": author,
-        "android-app-store-link": "https://play.google.com/store/search?c=apps&q="+encodeURIComponent("Dibuat oleh FRM pada "+tgl()),
-        "Ios-app-store-link": alink,
         "emojis": categories,
         ...extra
     };
