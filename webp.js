@@ -1,5 +1,6 @@
-const nodewebpmuxxx =  require("node-webpmux")
-const ftipe = await import("file-type")
+const webp = require("node-webpmux")
+const {fileTypeFromBuffer} = await import("file-type")
+const {readFileSync,writeFileSync,rmSync} = require("fs")
 
 function tgl() {
     const date = new Date()
@@ -12,7 +13,7 @@ function tgl() {
 }
 async function Img2webp(buffer) {
     const ran = randomBytes(14).toString('hex')
-    const {ext} = await ftipe.fileTypeFromBuffer(buffer)
+    const {ext} = await fileTypeFromBuffer(buffer)
     const awal = "node_modules/sampah/"+ran+"."+ext
     const akhir = "node_modules/sampah/"+ran+".webp"
     writeFileSync(awal,buffer)
@@ -23,7 +24,7 @@ async function Img2webp(buffer) {
 }
 async function Mp42webp(buffer) {
     const ran = randomBytes(14).toString('hex')
-    const {ext} = await ftipe.fileTypeFromBuffer(buffer)
+    const {ext} = await fileTypeFromBuffer(buffer)
     const awal = "node_modules/sampah/"+ran+"."+ext
     const akhir = "node_modules/sampah/"+ran+".webp"
     writeFileSync(awal,buffer)
