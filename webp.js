@@ -52,3 +52,5 @@ async function addExif(webpSticker, packname = "Stiker kita", author = new Date(
     img.exif = exif
     return await img.save(null)
 }
+
+return {addExif,Mp42webp,Img2webp}
