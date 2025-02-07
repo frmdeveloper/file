@@ -1,6 +1,7 @@
 const webp = require("node-webpmux")
 const {fileTypeFromBuffer} = await import("file-type")
 const {readFileSync,writeFileSync,rmSync} = require("fs")
+const {randomBytes} = require("crypto")
 
 function tgl() {
     const date = new Date()
