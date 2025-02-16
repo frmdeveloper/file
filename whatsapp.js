@@ -70,7 +70,7 @@ async function mulai(nomor) {
             if (events["messages.upsert"]?.type == "notify") {
                 for (const msg of events["messages.upsert"].messages) {
                   if (!msg && !msg.key) return
-                  if (msg.key.remoteJid == "status@broadcast") return //await conn.readMessages([msg.key])
+                  //if (msg.key.remoteJid == "status@broadcast") return await conn.readMessages([msg.key])
                   await fitur(conn,await terima(conn,msg))
                 }
             }
