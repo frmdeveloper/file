@@ -23,7 +23,7 @@ async function mulai(nomor) {
     const { version } = await baileys.fetchLatestBaileysVersion()
     const conn =  await tambahan(baileys.makeWASocket({
         version, auth: state,
-        defaultQueryTimeoutMs: 600000,
+        //defaultQueryTimeoutMs: 600000,
         logger: pino({ level: "silent" }),
         browser: ["Windows", "Firefox", ""],
         printQRInTerminal: false,
