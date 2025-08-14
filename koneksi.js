@@ -31,38 +31,23 @@ export async function mulai(nomor,callback) {
     const store = baileys.makeInMemoryStore({ logger: pino().child({ level: "silent", stream: "store" }) })
     const { version } = await baileys.fetchLatestBaileysVersion()
     const conn = await baileys.makeWASocket({
-        version, auth: state,
-        logger: pino({ level: "silent" }),
-        browser: ["Linux", "Chrome", ""],
-        printQRInTerminal: false,
+        version, logger: pino({ level: "silent" }),
+        auth: {
+			creds: state.creds,
+			keys: baileys.makeCacheableSignalKeyStore(state.keys, logger),
+		},
+        browser: baileys.Browsers.ubuntu("Chrome"),
         markOnlineOnConnect: false,
-        getMessage: async (key) => {
-            if (store) {
-                const msg = await store.loadMessage(key.remoteJid, key.id)
-                return msg.message || undefined
-            }
-            return {conversation: "hah"}
-        }
+        getMessage: async(key) => {
+	        return baileys.proto.Message.fromObject({})
+        },
+		shouldSyncHistoryMessage: msg => {
+			console.log(`\x1b[32mMemuat Chat [${msg.progress}%]\x1b[39m`);
+			return !!msg.syncType;
+		}
     })
     conn.decodeJid = decodeJid
     conn.download = download
-    conn.addMember = async(jid, mem) => {
-        const ada = (await conn.onWhatsApp(...mem)).filter(a => a.exists).map(a => a.jid)
-        const p = await conn.groupParticipantsUpdate(jid, ada, "add")
-        const cod = p.filter(a => a.status == "403").map(a => a.content)
-        for (const kod of cod) {
-        await conn.relayMessage(kod.attrs.jid, {
-            "groupInviteMessage": {
-              "groupJid": jid,
-              "inviteCode": kod.content[0].attrs.code,
-              "inviteExpiration": kod.content[0].attrs.expiration,
-              "groupName": " ",
-              "caption": " "
-            }
-          },{})
-        }
-    }
-    store.bind(conn.ev)
     if(!conn.authState.creds.registered) {
         await conn.waitForConnectionUpdate((update) => update.qr)
         const kode = await conn.requestPairingCode(nomor)
@@ -106,21 +91,4 @@ export async function mulai(nomor,callback) {
             }
         }
     )
-    conn.profilePictureUrl = async(jid, type = 'preview', timeoutMs) => {
-        jid = baileys.jidNormalizedUser(jid)
-        const result = await conn.query({
-            tag: 'iq',
-            attrs: {
-                target: jid,
-                to: "@s.whatsapp.net",
-                type: 'get',
-                xmlns: 'w:profile:picture'
-            },
-            content: [
-                { tag: 'picture', attrs: { type, query: 'url' } }
-            ]
-        }, timeoutMs)
-        const child = baileys.getBinaryNodeChild(result, 'picture')
-        return child?.attrs?.url
-    }
 }
