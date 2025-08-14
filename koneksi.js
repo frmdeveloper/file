@@ -28,7 +28,6 @@ export async function mulai(nomor,callback) {
     if (!nomor) throw new ReferenceError("number ?")
     if (!callback) throw new ReferenceError("callback ?")
     const { state, saveCreds } = await baileys.useMultiFileAuthState("./whatsapp/sesi_"+nomor)
-    const store = baileys.makeInMemoryStore({ logger: pino().child({ level: "silent", stream: "store" }) })
     const { version } = await baileys.fetchLatestBaileysVersion()
     const conn = await baileys.makeWASocket({
         version, logger: pino({ level: "silent" }),
