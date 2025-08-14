@@ -23,6 +23,7 @@ const download = async (message, type) => {
     }
     return buffer
 }
+const logger = pino({ level: "silent" })
 
 export async function mulai(nomor,callback) {
     if (!nomor) throw new ReferenceError("number ?")
@@ -30,7 +31,7 @@ export async function mulai(nomor,callback) {
     const { state, saveCreds } = await baileys.useMultiFileAuthState("./whatsapp/sesi_"+nomor)
     const { version } = await baileys.fetchLatestBaileysVersion()
     const conn = await baileys.makeWASocket({
-        version, logger: pino({ level: "silent" }),
+        version, logger,
         auth: {
 			creds: state.creds,
 			keys: baileys.makeCacheableSignalKeyStore(state.keys, logger),
